@@ -1,53 +1,15 @@
-from app.db.db import SessionLocal
-from app.db.crud import (
-    get_categories,
-    get_books,
-    update_category,
-    update_book,
-    delete_book
-)
+from fastapi import FastAPI
 
-db = SessionLocal()
+from app.api.books import router as books_router
+from app.api.categories import router as categories_router
 
-print("Категории ДО изменения:")
-
-for category in get_categories(db):
-    print(category.id, category.title)
-
-print("\nКниги ДО изменения:")
-
-for book in get_books(db):
-    print(book.id, book.title, book.price)
+app = FastAPI()
 
 
-# UPDATE
-
-update_category(db, 1, "Научная фантастика")
-
-update_book(
-    db,
-    1,
-    "Dune (обновлено)",
-    "Обновленное описание",
-    2000,
-    "",
-    1
-)
-
-print("\nПосле UPDATE:")
-
-for category in get_categories(db):
-    print(category.id, category.title)
-
-for book in get_books(db):
-    print(book.id, book.title, book.price)
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 
-# DELETE
-
-delete_book(db, 4)
-
-print("\nПосле DELETE:")
-
-for book in get_books(db):
-    print(book.id, book.title, book.price)
+app.include_router(books_router)
+app.include_router(categories_router)
