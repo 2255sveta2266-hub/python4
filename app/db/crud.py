@@ -49,6 +49,10 @@ def get_book_by_id(db, book_id):
     return db.query(Book).filter(
         Book.id == book_id
     ).first()
+def get_books_by_category(db, category_id):
+    return db.query(Book).filter(
+        Book.category_id == category_id
+    ).all()
 
 
 # UPDATE
